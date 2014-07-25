@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Release Notes</title>
+	<link rel="stylesheet" href="/source/css/release-style.css">
+	<style>
+		#flag {
+			color: #fff;
+			font-family: Times,TimesNR,'New Century Schoolbook',xGeorgia,'New York',serif;
+			font-size: 4.5em;
+			font-style: italic;
+			font-weight: bold;
+			margin: 20px 10px;
+			position: fixed;
+			top: 0px;
+			right:0px;
+		}
+
+		#main {
+			margin-top: 5em;
+		}
+
+		article:hover {
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<%if @data.size <= 0%>
+		<div id="info">当日没有发布</div>
+	<% else %>
+		<div id="flag"><%=Date.parse(@data[0][2]).strftime('%Y年%m月%d日') %></div>
+	<% end %>
+	
+	<div id="main">
+	<%@data.each do |item|%>
+		<article>
+			<p class="title"><%=item[3]%></p>
+			<div class="content">
+				<span><a target="_blank" href="<%=SITE_ROOT+item[0]%>"><%=item[1]+" @ "+item[0]%></a></span>
+				<span class="timer"><%=Date.parse(item[2]).strftime('%Y年%m月%d日')%></span>
+			</div>
+		</article>
+	<%end%>
+	<div>
+</body>
+<script src="/source/js/jquery-1.11.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		unread = "rgb(52, 152, 219)"; // 未阅
+		onread = "rgb(231, 76, 60)";  // 正在阅读
+		readed = "rgb(209, 209, 209)";// 已阅
+
+		$("p").mouseenter(function(){
+			var status = $(this).css("background-color");
+			if (status == unread){
+				$(this).css("background-color", onread);
+			}
+		});
+
+		$("p").mouseleave(function(){
+			var status = $(this).css("background-color");
+
+			if (status != readed){
+				$(this).css("background-color", unread);
+			}
+		});
+
+		$("p").click(function(){
+			var status = $(this).css("background-color");
+
+			if (status == onread || status == unread){
+				$(this).css("background-color", readed);
+			}
+			if (status == readed) {
+				$(this).css("background-color", unread);
+			}
+		});
+
+		//scroll function
+		$(window).scroll(function(){
+			var windscroll = $(window).scrollTop();
+
+			$("#main article").each(function(i){
+				if ($(this).position().top <= windscroll + 200 ){
+					var currDate = $(this).find("span")[1].innerHTML;
+					if (currDate != $("#flag").text()){
+						$("#flag").text(currDate);
+					}
+				}
+			});
+		});
+	});
+</script>
+</html>
