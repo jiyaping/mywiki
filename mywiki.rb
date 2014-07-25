@@ -54,7 +54,7 @@ class Resource
 	attr_accessor :res_pool   #store all resource in a hash map
 	attr_accessor :nav_tree   #store navigation data ,generated from res_pool
 	attr_accessor :release_notes #store release notes
-	attr_accessor :search_data #store release notes
+	attr_accessor :search_data #store search data
 
 	def initialize
 		@res_pool = {}
